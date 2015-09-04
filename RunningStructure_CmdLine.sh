@@ -5,15 +5,16 @@
 #just fill in the following 3 variables (and make sure the param files are completed
 
 NAME=Testdata1			#supply file name suffix
-MAXK=4					#supply max number of K value to test (K = 1-? )
+MAXK=5					#supply max number of K value to test (K = 1-? )
 NREP=5					#supply number of reps for each Kvalue test
 
+mkdir results
 
 COUNTER=1 
 while [  $COUNTER -le $MAXK  ]; do 
 	REP=1
 	while [ $REP -le $NREP ]; do
-		nohup ./structure -m mainparams -K $COUNTER -o ./output/"$NAME"_K"$COUNTER"_rep"$REP" 2> /dev/null < /dev/null &
+		nohup ./structure -m mainparams -D 14413270"$COUNTER""$REP" -K $COUNTER -o ./results/"$NAME"_K"$COUNTER"_rep"$REP" 2> /dev/null < /dev/null &
 		REP=$((REP+1))
 		done
 	let COUNTER=COUNTER+1
