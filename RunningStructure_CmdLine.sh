@@ -20,7 +20,7 @@ while [  $COUNTER -le $MAXK  ]; do
 		done
 	let COUNTER=COUNTER+1
 done	
-	
+echo "Enter 'ps' to see Structure processes running"	
 #  -e extraparams
 
 #Running STRUCTURE
