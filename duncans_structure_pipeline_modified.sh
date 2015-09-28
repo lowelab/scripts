@@ -21,9 +21,9 @@ NREP=10					#supply number of reps for each Kvalue test
 #Min=2		#=Minimum K to test
 #Max=6		#=Maximum K to test (structure will run Max + 1 K's)
 #Rep=3		#=Replicates of each K to test
-Ind=840		#=Number of Individuals in the dataset (Info used in CLUMPP)
-Pop=43		#=Number of populations in the dataset (Info used in CLUMPP)
-Loc=104		#=number of Loci in dataset
+Ind=200		#=Number of Individuals in the dataset (Info used in CLUMPP)
+Pop=2		#=Number of populations in the dataset (Info used in CLUMPP)
+#Loc=104		#=number of Loci in dataset
 #BURN=100   #=length of STRUCTURE burnin period (will replace existing test in mainparams file)
 #REPS=200   #=number of MCMC reps in STRUCTURE after burnin (will replace existing test in mainparams file)
 
@@ -59,12 +59,17 @@ echo "analysis started at $(date)"
 echo "deleting contents of Results folder"
 
 
-if [ ! -d ./results ]
-then mkdir results
-find results -type f -delete
+if [ -d ./results ]
+then rm -r results
+mkdir results
 fi
+
 if [ -f ./commands.txt ]
 then rm commands.txt
+fi
+
+if [ -f ./results.zip ]
+then rm results.zip
 fi
 #=====end clear Results Directory=====#
 
@@ -160,7 +165,7 @@ echo "started at $(date)"
 
 echo "running CLUMPP on Individual data"
 echo "started at $(date)"
-
+mkdir results/CLUMPP
 cd CLUMPP
 ./CLUMPP paramfile_ind -i ../results/HARVESTER/K"$c".indfile.txt -p ../results/HARVESTER/K"$c".popfile.txt -o ../results/CLUMPP/K"$c".indoutfile.txt -j ../results/CLUMPP/K"$c".indmiscfile.txt -k "$c" -r "$NREP" -c "$Ind"
 
@@ -181,7 +186,9 @@ echo "completed at $(date)"
 #=====end CLUMPP=====#
 
 #=====run DISTRUCT=====#
-cd ../distruct1.1/
+cd ../
+mkdir results/DISTRUCT
+cd distruct1.1/
 echo "running DISTRUCT"
 echo "started at $(date)"
 
