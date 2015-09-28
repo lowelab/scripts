@@ -127,13 +127,13 @@ echo "completed at $(date)"
 echo "reformating STRUCTURE harvester results to identify best K and make files suitable for CLUMPP"
 echo "started at $(date)"
 
-sed -e '1,17d' results/HARVESTER/evanno.txt > results/HARVESTER/subevanno.txt
+sed -e '1,18d' results/HARVESTER/evanno.txt > results/HARVESTER/subevanno.txt
 
 #=====end remove/rename=====#
 
 #=====find best K=====#
 
-c=$(sort -nrk7,1 results/HARVESTER/subevanno.txt | head -1 | cut -f1)
+c=$(sort -nrk7 results/HARVESTER/subevanno.txt | head -1 | cut -f1)
 
 echo 
 echo best delta K = "$c"
@@ -156,12 +156,13 @@ echo "completed at $(date)"
 echo "running CLUMPP"
 echo "started at $(date)"
 
-    this will run CLUMPP for both population and individual, needed for DISTRUCT
+#    this will run CLUMPP for both population and individual, needed for DISTRUCT
 
 echo "running CLUMPP on Individual data"
 echo "started at $(date)"
 
-./CLUMPP/CLUMPP paramfile_ind -i results/HARVESTER/K"$c".indfile.txt -p results/HARVESTER/K"$c".popfile.txt -o results/CLUMPP/K"$c".indoutfile.txt -j results/CLUMPP/K"$c".indmiscfile.txt -k "$c" -r "$NREP" -c "$Ind"
+cd CLUMPP
+./CLUMPP paramfile_ind -i ../results/HARVESTER/K"$c".indfile.txt -p ../results/HARVESTER/K"$c".popfile.txt -o ../results/CLUMPP/K"$c".indoutfile.txt -j ../results/CLUMPP/K"$c".indmiscfile.txt -k "$c" -r "$NREP" -c "$Ind"
 
 echo "CLUMPP on Individual data completed"
 echo "completed at $(date)"
@@ -169,7 +170,7 @@ echo "completed at $(date)"
 echo "running CLUMPP on Population data"
 echo "started at $(date)"
 
-./CLUMPP/CLUMPP paramfile_pop -i results/HARVESTER/K"$c".indfile.txt -p results/HARVESTER/K"$c".popfile.txt -o results/CLUMPP/K"$c".popoutfile.txt -j results/CLUMPP/K"$c".popmiscfile.txt -k "$c" -r "$NREP" -c "$Pop"
+./CLUMPP paramfile_pop -i ../results/HARVESTER/K"$c".indfile.txt -p ../results/HARVESTER/K"$c".popfile.txt -o ../results/CLUMPP/K"$c".popoutfile.txt -j ../results/CLUMPP/K"$c".popmiscfile.txt -k "$c" -r "$NREP" -c "$Pop"
 
 echo "CLUMPP on Population data completed"
 echo "completed at $(date)"
@@ -180,17 +181,17 @@ echo "completed at $(date)"
 #=====end CLUMPP=====#
 
 #=====run DISTRUCT=====#
-
+cd ../distruct1.1/
 echo "running DISTRUCT"
 echo "started at $(date)"
 
-./distruct1.1/distructLinux1.1 -K "$c" -M "$Pop" -N "$Ind" -p results/CLUMPP/K"$c".popoutfile.txt -i results/CLUMPP/K"$c".indoutfile.txt -o results/DISTRUCT/"$NAME"_K"$c".ps
+./distructLinux1.1 -K "$c" -M "$Pop" -N "$Ind" -p ../results/CLUMPP/K"$c".popoutfile.txt -i ../results/CLUMPP/K"$c".indoutfile.txt -o ../results/DISTRUCT/"$NAME"_K"$c".ps
 #./distruct1.1/distructLinux1.1 -K "$c" -M "$Pop" -N "$Ind" -p results/CLUMPP/K"$c".popoutfile.txt -i results/CLUMPP/K"$c".indoutfile.txt -b "$LB" -o results/DISTRUCT/"$INPUT"_K"$c".ps
 
 
 echo "DISTRUCT completed"
 echo "completed at $(date)"
-
+cd ../
 #=====end DISTRUCT=====#
 
 echo "structure_pipeline completed"
